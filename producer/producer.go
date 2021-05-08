@@ -1,11 +1,10 @@
 package producer
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -23,9 +22,8 @@ func StartProducer() {
 	producer, err := setupProducer()
 	if err != nil {
 		panic(err)
-	} else {
-		log.Println("Kafka AsyncProducer up and running!")
 	}
+	log.Println("Kafka AsyncProducer up and running!")
 
 	// Trap SIGINT to trigger a graceful shutdown.
 	signals := make(chan os.Signal, 1)
@@ -39,7 +37,7 @@ func StartProducer() {
 // setupProducer will create a AsyncProducer and returns it
 func setupProducer() (sarama.AsyncProducer, error) {
 	config := sarama.NewConfig()
-	sarama.Logger = log.New(os.Stderr, "[sarama_logger]", log.LstdFlags)
+	sarama.Logger = log.New(os.Stderr, "[kafka_logger]", log.LstdFlags)
 	return sarama.NewAsyncProducer(kafkaBrokers, config)
 }
 
@@ -48,9 +46,10 @@ func setupProducer() (sarama.AsyncProducer, error) {
 func produceMessages(producer sarama.AsyncProducer, signals chan os.Signal) {
 	for {
 		time.Sleep(time.Second)
-		valueBytes := []byte(time.Now().Format("15:04:05.000"))
-		valueHash := sha256.Sum256(valueBytes)
-		valueString := hex.EncodeToString(valueHash[:])
+		// valueBytes := []byte(time.Now().Format("15:04:05.000"))
+		// valueHash := sha256.Sum256(valueBytes)
+		// valueString := hex.EncodeToString(valueHash[:])
+		valueString := "to mój test nr " + strconv.Itoa(enqueued+1)
 		message := &sarama.ProducerMessage{Topic: KafkaTopic, Value: sarama.StringEncoder(valueString)}
 		select {
 		case producer.Input() <- message:

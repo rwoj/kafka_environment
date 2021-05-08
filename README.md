@@ -6,11 +6,11 @@
 
 ## Producer
 
-`go run main.go -p`
+`go run main.go -o producer`
 
 ## Consumer
 
-`go run main.go -c`
+`go run main.go -o consumer`
 
 **Note:** _To start multiples consumers, run this command in different terminals concurrently_.
 

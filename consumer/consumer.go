@@ -3,21 +3,22 @@ package consumer
 import (
 	"context"
 	"fmt"
-	"github.com/Shopify/sarama"
 	"log"
 	"os"
+
+	"github.com/Shopify/sarama"
 )
 
 var (
 	kafkaBrokers    = []string{"localhost:9093"}
 	kafkaTopics     = []string{"radek_topic"}
-	consumerGroupID = "sarama_consumer"
+	consumerGroupID = "radek_my_consumer_group"
 )
 
 func StartConsumer() {
 	// Init config, specify appropriate version
 	config := sarama.NewConfig()
-	sarama.Logger = log.New(os.Stderr, "[sarama_logger]", log.LstdFlags)
+	sarama.Logger = log.New(os.Stderr, "[kafka_logger]", log.LstdFlags)
 	config.Version = sarama.V2_1_0_0
 
 	// Start with a client
